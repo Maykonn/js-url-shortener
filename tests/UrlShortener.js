@@ -4,5 +4,5 @@ const longUrl = 'https://www.youtube.com/c/JogandoMuitoOficial?sub_confirmation=
 const UrlShortener = require('../src/UrlShortener.js')(longUrl);
 
 UrlShortener.shorten();
-console.log('Long URL:', UrlShortener.getlongUrl());
+console.log('Long URL:', UrlShortener.getLongUrl());
 console.log('Short URL:', UrlShortener.getShortUrl());
