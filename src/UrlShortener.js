@@ -20,6 +20,7 @@ class UrlShortener {
   }
 
   shorten() {
+    // TODO: implements
     return this._shortUrl = this._longUrl.toUpperCase();
   }
 
