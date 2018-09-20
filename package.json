@@ -1,0 +1,11 @@
+{
+  "name": "node-js-url-shortener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maykonn Welington Candido <maykonn@outlook.com> (https://github.com/Maykonn)",
+  "license": "ISC"
+}
