@@ -1,5 +1,6 @@
 const URL = require('url').URL;
 const URLValidator = require('./url/Validator.js');
+const Crypto = require('crypto');
 
 class Shortener {
 
@@ -23,11 +24,17 @@ class Shortener {
     this._ShortUrl = null;
 
     /**
-     *
      * @type {Validator}
      * @private
      */
     this._UrlValidator = null;
+
+    /**
+     * URL hash algorithm
+     * @type {string}
+     * @private
+     */
+    this._URL_HASH_ALGORITHM = 'sha512';
   }
 
   /**
@@ -73,11 +80,22 @@ class Shortener {
 
     if (this._UrlValidator.isValid()) {
       this._LongUrl = new URL(this._OriginalUrl);
+      this._OriginalUrlHash = this._hashOriginalUrl();
+
+      // Verify if hash already exists on redis, if exists return the value
+      // on redis the hash is: HSET hash:{this._OriginalUrlHash} "longUrl" "http://anything..." "short" "A7k5saB"
+      // the short value of url is calculated based in a incremented number: INCRY currentId, returned value will
+      // be a number that will be used to compute the short string using: https://github.com/delight-im/ShortURL/blob/master/JavaScript/ShortURL.js
+
       this._ShortUrl = new URL(this._OriginalUrl.toUpperCase());
       return true;
     }
 
     return false;
+  }
+
+  _hashOriginalUrl() {
+    return Crypto.createHmac(this._URL_HASH_ALGORITHM, this._OriginalUrl).digest('hex');
   }
 
 }
