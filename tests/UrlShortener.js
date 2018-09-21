@@ -2,9 +2,10 @@
 
 const Shortener = require('../src/Shortener.js');
 
-// Yeah, I'm a youtuber too :)
 const URLShortener = new Shortener();
-URLShortener.shorten('https://www.youtube.com/c/JogandoMuitoOficial?sub_confirmation=1');
+URLShortener.shorten('https://github.com/Maykonn/node-js-url-shortener');
 
-console.log('Long:', URLShortener.getLongUrl());
-console.log('Short:', URLShortener.getShortUrl());
+console.log('Original URL:', URLShortener.getOriginalUrl());
+console.log('Long URL object:', URLShortener.getLongUrl());
+console.log('Short URL object:', URLShortener.getShortUrl());
+console.log('Errors:', URLShortener.getValidator().getErrors());

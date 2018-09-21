@@ -1,20 +1,41 @@
 const URL = require('url').URL;
-const URLValidationRegex = require('../src/URLValidationRegex.js');
+const URLValidator = require('./url/Validator.js');
 
 class Shortener {
 
   constructor() {
     /**
-     * @type {URL}
+     * @type {string}
      * @private
      */
-    this._longUrl = null;
+    this._OriginalUrl = '';
 
     /**
      * @type {URL}
      * @private
      */
-    this._shortUrl = null;
+    this._LongUrl = null;
+
+    /**
+     * @type {URL}
+     * @private
+     */
+    this._ShortUrl = null;
+
+    /**
+     *
+     * @type {Validator}
+     * @private
+     */
+    this._UrlValidator = null;
+  }
+
+  /**
+   * The original URL as given string
+   * @returns {string}
+   */
+  getOriginalUrl() {
+    return this._OriginalUrl;
   }
 
   /**
@@ -22,7 +43,7 @@ class Shortener {
    * @returns {URL}
    */
   getLongUrl() {
-    return this._longUrl;
+    return this._LongUrl;
   }
 
   /**
@@ -30,7 +51,15 @@ class Shortener {
    * @returns {URL}
    */
   getShortUrl() {
-    return this._shortUrl;
+    return this._ShortUrl;
+  }
+
+  /**
+   * The URL Validation object
+   * @returns {Validator}
+   */
+  getValidator() {
+    return this._UrlValidator;
   }
 
   /**
@@ -39,23 +68,16 @@ class Shortener {
    * @returns {boolean}
    */
   shorten(longUrl) {
-    if (!this._validateUrl(longUrl)) {
-      throw new Error('Invalid URL, given: ' + longUrl);
+    this._OriginalUrl = (longUrl || undefined);
+    this._UrlValidator = new URLValidator(this._OriginalUrl);
+
+    if (this._UrlValidator.isValid()) {
+      this._LongUrl = new URL(this._OriginalUrl);
+      this._ShortUrl = new URL(this._OriginalUrl.toUpperCase());
+      return true;
     }
 
-    this._longUrl = new URL(longUrl);
-    this._shortUrl = new URL(longUrl.toUpperCase());
-
-    return true;
-  }
-
-  _validateUrl(url) {
-    // TODO: move to a specific validation object
-    // TODO: verify the possibility to validate if url is not a shortened url
-    if (typeof url !== 'string') {
-      throw new Error('(string) URL is required');
-    }
-    return url.match(URLValidationRegex);
+    return false;
   }
 
 }
