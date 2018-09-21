@@ -1,8 +1,10 @@
 "use strict";
 
-const longUrl = 'https://www.youtube.com/c/JogandoMuitoOficial?sub_confirmation=1'; // Yeah, I'm a youtuber too :)
-const UrlShortener = require('../src/UrlShortener.js')(longUrl);
+const Shortener = require('../src/Shortener.js');
 
-UrlShortener.shorten();
-console.log('Long URL:', UrlShortener.getLongUrl());
-console.log('Short URL:', UrlShortener.getShortUrl());
+// Yeah, I'm a youtuber too :)
+const URLShortener = new Shortener();
+URLShortener.shorten('https://www.youtube.com/c/JogandoMuitoOficial?sub_confirmation=1');
+
+console.log('Long:', URLShortener.getLongUrl());
+console.log('Short:', URLShortener.getShortUrl());
