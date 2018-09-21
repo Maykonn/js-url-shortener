@@ -1,5 +1,4 @@
 /**
- * @see https://gist.github.com/dperini/729294
  * @type {RegExp}
  */
 module.exports = new RegExp(
