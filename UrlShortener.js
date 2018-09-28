@@ -1,6 +1,7 @@
 const URL = require('url').URL;
-const URLValidator = require('./url/Validator.js');
+const URLValidator = require('./src/url/Validator.js');
 const Crypto = require('crypto');
+const JsRandomNumber = require('js-random-number');
 
 class Shortener {
 
@@ -80,18 +81,32 @@ class Shortener {
 
     if (this._UrlValidator.isValid()) {
       this._LongUrl = new URL(this._OriginalUrl);
-      this._OriginalUrlHash = this._hashOriginalUrl();
+
+      const UniqueNumber = this._getUniqueNumber();
+      console.log(UniqueNumber);
 
       // Verify if hash already exists on redis, if exists return the value
       // on redis the hash is: HSET hash:{this._OriginalUrlHash} "longUrl" "http://anything..." "short" "A7k5saB"
       // the short value of url is calculated based in a incremented number: INCRY currentId, returned value will
       // be a number that will be used to compute the short string using: https://github.com/delight-im/ShortURL/blob/master/JavaScript/ShortURL.js
 
-      this._ShortUrl = new URL(this._OriginalUrl.toUpperCase());
+      //this._ShortUrl = new URL(this._OriginalUrl.toUpperCase());
       return true;
     }
 
     return false;
+  }
+
+  /**
+   * @return {number}
+   * @private
+   */
+  _getUniqueNumber() {
+    const Configuration = new JsRandomNumber.Configuration();
+    Configuration.timestampBased();
+
+    const RandomNumberTimestampBased = new JsRandomNumber.Generator(Configuration);
+    return RandomNumberTimestampBased.getNumber().getValue();
   }
 
   _hashOriginalUrl() {
