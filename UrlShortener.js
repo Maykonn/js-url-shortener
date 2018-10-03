@@ -1,7 +1,7 @@
+const Configuration = require('./src/Configuration.js');
 const URL = require('url').URL;
 const URLValidator = require('./src/url/Validator.js');
-const Crypto = require('crypto');
-const JsRandomNumber = require('js-random-number');
+const Shorten = require('./src/Shortener.js');
 
 class Shortener {
 
@@ -81,9 +81,8 @@ class Shortener {
 
     if (this._UrlValidator.isValid()) {
       this._LongUrl = new URL(this._OriginalUrl);
+      this._ShortUrl = new Shorten(this._LongUrl);
 
-      const UniqueNumber = this._getUniqueNumber();
-      console.log(UniqueNumber);
 
       // Verify if hash already exists on redis, if exists return the value
       // on redis the hash is: HSET hash:{this._OriginalUrlHash} "longUrl" "http://anything..." "short" "A7k5saB"
@@ -97,22 +96,9 @@ class Shortener {
     return false;
   }
 
-  /**
-   * @return {number}
-   * @private
-   */
-  _getUniqueNumber() {
-    const Configuration = new JsRandomNumber.Configuration();
-    Configuration.timestampBased();
-
-    const RandomNumberTimestampBased = new JsRandomNumber.Generator(Configuration);
-    return RandomNumberTimestampBased.getNumber().getValue();
-  }
-
-  _hashOriginalUrl() {
-    return Crypto.createHmac(this._URL_HASH_ALGORITHM, this._OriginalUrl).digest('hex');
-  }
-
 }
 
-module.exports = Shortener;
+module.exports = {
+  Configuration: Configuration,
+  UrlShortener: Shortener
+};
