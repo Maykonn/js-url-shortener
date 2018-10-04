@@ -12,7 +12,7 @@ class StringHelper {
     while (i < len) {
       hash = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
     }
-    return (hash + 2147483647) + 1;
+    return hash >>> 0;
   }
 
 }
