@@ -1,7 +1,7 @@
 class StringHelper {
 
   /**
-   * This matches Java's implementation of the standard object.hashCode()
+   * Generating a number as hash of a string
    *
    * @param str
    * @return {number}
