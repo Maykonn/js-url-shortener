@@ -12,6 +12,12 @@ class Configuration {
      * @private
      */
     this._serviceUrl = undefined;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this._shortenMinLength = 7;
   }
 
   /**
@@ -24,12 +30,30 @@ class Configuration {
   }
 
   /**
+   * Retrieves the min length configured to calculate the shorten part of url
+   *
+   * @return {number}
+   */
+  getShortenMinLength() {
+    return this._shortenMinLength;
+  }
+
+  /**
    * Configures the service URL (your url shortener service or api, etc)
    *
    * @param serviceUrl
    */
   setServiceUrl(serviceUrl) {
     this._serviceUrl = this._generateServiceUrl(serviceUrl);
+  }
+
+  /**
+   * Configures the min length to calculate the shorten part of url
+   *
+   * @param minLength
+   */
+  setShortenMinLength(minLength) {
+    this._shortenMinLength = minLength;
   }
 
   /**
