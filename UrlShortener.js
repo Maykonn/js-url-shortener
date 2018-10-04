@@ -1,11 +1,21 @@
 const Configuration = require('./src/Configuration.js');
 const URL = require('url').URL;
 const URLValidator = require('./src/url/Validator.js');
-const Shorten = require('./src/Shortener.js');
+const Shortener = require('./src/Shortener.js');
+const ShortUrl = require('./src/url/ShortUrl.js');
 
-class Shortener {
+class UrlShortener {
 
-  constructor() {
+  /**
+   * @param {Configuration} Configuration
+   */
+  constructor(Configuration) {
+    /**
+     * @type {Configuration}
+     * @private
+     */
+    this._Configuration = Configuration;
+
     /**
      * @type {string}
      * @private
@@ -19,23 +29,16 @@ class Shortener {
     this._LongUrl = null;
 
     /**
-     * @type {URL}
+     * @type {ShortUrl}
      * @private
      */
     this._ShortUrl = null;
 
     /**
-     * @type {Validator}
+     * @type {URLValidator}
      * @private
      */
-    this._UrlValidator = null;
-
-    /**
-     * URL hash algorithm
-     * @type {string}
-     * @private
-     */
-    this._URL_HASH_ALGORITHM = 'sha512';
+    this._Validator = null;
   }
 
   /**
@@ -48,6 +51,7 @@ class Shortener {
 
   /**
    * The original URL parsed
+   *
    * @returns {URL}
    */
   getLongUrl() {
@@ -56,6 +60,7 @@ class Shortener {
 
   /**
    * The shortened URL parsed
+   *
    * @returns {URL}
    */
   getShortUrl() {
@@ -64,32 +69,32 @@ class Shortener {
 
   /**
    * The URL Validation object
-   * @returns {Validator}
+   *
+   * @returns {URLValidator}
    */
   getValidator() {
-    return this._UrlValidator;
+    return this._Validator;
   }
 
   /**
-   * Shorten a long URL string
-   * @param longUrl
+   * Shorten a long url
+   *
+   * @param {string} longUrl
    * @returns {boolean}
    */
   shorten(longUrl) {
     this._OriginalUrl = (longUrl || undefined);
-    this._UrlValidator = new URLValidator(this._OriginalUrl);
+    this._Validator = new URLValidator(this._OriginalUrl);
 
-    if (this._UrlValidator.isValid()) {
+    if (this._Validator.isValid()) {
       this._LongUrl = new URL(this._OriginalUrl);
-      this._ShortUrl = new Shorten(this._LongUrl);
 
+      const Shortened = (new Shortener(this._LongUrl)).shorten();
 
-      // Verify if hash already exists on redis, if exists return the value
-      // on redis the hash is: HSET hash:{this._OriginalUrlHash} "longUrl" "http://anything..." "short" "A7k5saB"
-      // the short value of url is calculated based in a incremented number: INCRY currentId, returned value will
-      // be a number that will be used to compute the short string using: https://github.com/delight-im/ShortURL/blob/master/JavaScript/ShortURL.js
+      this._ShortUrl = new ShortUrl();
+      this._ShortUrl.id = Shortened.id;
+      this._ShortUrl.value = new URL(this._Configuration.getServiceUrl().origin + '/' + Shortened.shortenedStr);
 
-      //this._ShortUrl = new URL(this._OriginalUrl.toUpperCase());
       return true;
     }
 
@@ -100,5 +105,5 @@ class Shortener {
 
 module.exports = {
   Configuration: Configuration,
-  UrlShortener: Shortener
+  UrlShortener: UrlShortener
 };
