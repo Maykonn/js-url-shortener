@@ -89,7 +89,7 @@ class UrlShortener {
     if (this._Validator.isValid()) {
       this._LongUrl = new URL(this._OriginalUrl);
 
-      const Shortened = (new Shortener(this._LongUrl)).shorten();
+      const Shortened = (new Shortener(this._LongUrl, this._Configuration)).shorten();
 
       this._ShortUrl = new ShortUrl();
       this._ShortUrl.id = Shortened.id;
