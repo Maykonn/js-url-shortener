@@ -36,13 +36,13 @@ class Shortener {
    */
   shorten() {
     let result = this._createHash(this._LongUrl.href);
-/*
+
     if (this._needsPad(result.hash)) {
-      const padLength = this._Configuration.getShortenMinLength() - result.hash.length;
+      /*const padLength = this._Configuration.getShortenMinLength() - result.hash.length;
       for (let i = 0; i < padLength; i++) {
         result.hash += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET_LENGTH));
-      }
-    }*/
+      }*/
+    }
 
     return result;
   }
