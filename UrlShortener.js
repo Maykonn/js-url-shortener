@@ -93,7 +93,7 @@ class UrlShortener {
 
       this._ShortUrl = new ShortUrl();
       this._ShortUrl.id = Shortened.id;
-      this._ShortUrl.value = new URL(this._Configuration.getServiceUrl().origin + '/' + Shortened.shortenedStr);
+      this._ShortUrl.value = new URL(this._Configuration.getServiceUrl().origin + '/' + Shortened.hash);
 
       return true;
     }
